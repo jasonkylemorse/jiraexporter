@@ -18,6 +18,7 @@ class IssueImporter(object):
 
         self.client = pymongo.MongoClient(host)
         self.db = self.client[database]
+        self.issues = self.db.issues
         self.issues_raw = []
 
     def load_issues_json(self, filename=INPUT_FILE):
@@ -30,5 +31,41 @@ class IssueImporter(object):
 
     def import_to_mongo(self):
 
-        self.issues = self.db.issues
         self.issues.insert_many(self.issues_raw)
+
+    def normalize_issues(self):
+
+        self.normalized_issues = self.db.normalized_issues
+
+        for issue_raw in self.issues.find({}, {
+            "fields.status.statusCategory.name": 1,
+            "fields.status.description": 1,
+            "fields.status.name": 1,
+            "fields.creator.active": 1,
+            "fields.creators.name": 1,
+            "fields.watches.watchCount": 1,
+            "fields.assignee.active": 1,
+            "fields.assignee.name": 1,
+            "fields.lastViewed": 1,
+            "fields.issueslinks": 1,
+            "fields.votes.votes": 1,
+            "fields.fixVersions": 1,
+            "fields.priority.name": 1,
+            "fields.updated": 1,
+            "fields.subtasks": 1,
+            "fields.description": 1,
+            "fields.reporter.active": 1,
+            "fields.reporter.name": 1,
+            "fields.versions": 1,
+            "fields.components": 1,
+            "fields.created": 1,
+            "fields.resolutiondate": 1,
+            "fields.summary": 1,
+            "fields.project.key": 1,
+            "fields.issuetype.description": 1,
+            "fields.issuetype.name": 1,
+            "fields.resolution.description": 1,
+            "fields.resolution.name": 1,
+            "id": 1}):
+                self.normalized_issues.insert(issue_raw)
+

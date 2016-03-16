@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """ Export tool for extracting all jira issues from a given project
 
 """

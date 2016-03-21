@@ -11,15 +11,17 @@ from jira import JIRA
 JIRA_URL = 'https://jira.mongodb.org'
 PROJECT = 'SERVER'
 OUTPUT_FILE = 'issues.json'
+BASIC_AUTH = ('', '')
 
 
 class IssueExporter(object):
 
-    def __init__(self, jira_url=JIRA_URL, project=PROJECT):
+    def __init__(self, jira_url=JIRA_URL, project=PROJECT,
+                 basic_auth=BASIC_AUTH):
         self.jira_url = JIRA_URL
         self.project = project
         self.all_issues = []
-        self.jira = JIRA(jira_url)
+        self.jira = JIRA(jira_url, basic_auth=basic_auth)
         self.raw_issues = []
 
     def fetch_issues(self, startAt=0, maxResults=1000):

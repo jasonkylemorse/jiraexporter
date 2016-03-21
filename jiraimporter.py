@@ -20,19 +20,19 @@ class IssueImporter(object):
         self.client = pymongo.MongoClient(host)
         self.db = self.client[database]
         self.issues = self.db.issues
-        self.issues_raw = []
+        self.raw_issues = []
 
     def load_issues_json(self, filename=INPUT_FILE):
 
-        if self.issues_raw != []:
+        if self.raw_issues != []:
             raise Exception("raw input already exists")
 
         with open(filename, 'r') as fp:
-            self.issues_raw = json.load(fp)
+            self.raw_issues = json.load(fp)
 
     def import_to_mongo(self):
 
-        self.issues.insert_many(self.issues_raw)
+        self.issues.insert_many(self.raw_issues)
 
     def normalize_issues(self):
 
@@ -46,6 +46,7 @@ class IssueImporter(object):
             "fields.creators.name": 1,
             "fields.watches.watchCount": 1,
             "fields.assignee.active": 1,
+            "fields.assignee.displayName": 1,
             "fields.assignee.name": 1,
             "fields.lastViewed": 1,
             "fields.issueslinks": 1,

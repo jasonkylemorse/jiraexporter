@@ -14,7 +14,7 @@ OUTPUT_FILE = 'issues.json'
 BASIC_AUTH = ('', '')
 
 
-class IssueExporter(object):
+class JiraIssueExporter(object):
 
     def __init__(self, jira_url=JIRA_URL, project=PROJECT,
                  basic_auth=BASIC_AUTH):
